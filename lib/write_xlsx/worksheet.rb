@@ -1075,13 +1075,13 @@ module Writexlsx
         # Match integer with leading zero(s)
         if @leading_zeros && _token =~ /^0\d*$/
           write_string(_row, _col, _token, _format)
-        elsif _token =~ /\A([+-]?)(?=\d|\.\d)\d*(\.\d*)?([Ee]([+-]?\d+))?\Z/
+        elsif _token.is_a?(String) && _token =~ /\A([+-]?)(?=\d|\.\d)\d*(\.\d*)?([Ee]([+-]?\d+))?\Z/
           write_number(_row, _col, _token, _format)
         # Match formula
-        elsif _token =~ /^=/
+        elsif _token.is_a?(String) && _token =~ /^=/
           write_formula(_row, _col, _token, _format, _value1)
         # Match array formula
-        elsif _token =~ /^\{=.*\}$/
+        elsif _token.is_a?(String) && _token =~ /^\{=.*\}$/
           write_formula(_row, _col, _token, _format, _value1)
         # Match blank
         elsif _token == ''
@@ -1089,13 +1089,13 @@ module Writexlsx
           write_blank(_row, _col, _format)
         elsif @workbook.strings_to_urls
           # Match http, https or ftp URL
-          if _token =~ %r{\A[fh]tt?ps?://}
+          if _token.is_a?(String) && _token =~ %r{\A[fh]tt?ps?://}
             write_url(_row, _col, _token, _format, _value1, _value2)
           # Match mailto:
-          elsif _token =~ /\Amailto:/
+          elsif _token.is_a?(String) && _token =~ /\Amailto:/
             write_url(_row, _col, _token, _format, _value1, _value2)
           # Match internal or external sheet link
-          elsif _token =~ /\A(?:in|ex)ternal:/
+          elsif _token.is_a?(String) && _token =~ /\A(?:in|ex)ternal:/
             write_url(_row, _col, _token, _format, _value1, _value2)
           else
             write_string(_row, _col, _token, _format)
